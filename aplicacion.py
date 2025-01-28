@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import as Image
+from PIL import Image
 from tensorflow.preprocessing.image import img_to_array
 
 def preprocess_image(image):
