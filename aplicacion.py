@@ -18,8 +18,13 @@ def main():
   if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption = "imagen subida")
+    
     preprocessed_image = preprocess_image(image)
+    
     st.image(preprocessed_image, caption = "imagen subida")
+    
+    if st.button("Clasificar imagen")
+      st.markdown("Imagen clasificada")
 
                                    
 if __name__=='__main__':
