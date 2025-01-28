@@ -23,7 +23,7 @@ def main():
     
     st.image(preprocessed_image, caption = "imagen subida")
     
-    if st.button("Clasificar imagen")
+    if st.button("Clasificar imagen"):
       st.markdown("Imagen clasificada")
 
                                    
