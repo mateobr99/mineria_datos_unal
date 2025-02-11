@@ -1,4 +1,57 @@
 import streamlit as st
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import gzip
+import pickle
+
+# Cargar datos
+def load_data():
+    df = pd.read_csv("weather_data.csv")
+    df["Date_Time"] = pd.to_datetime(df["Date_Time"])
+    return df
+
+df = load_data()
+
+# Título
+title = "Análisis Exploratorio del Clima"
+st.title(title)
+
+# Mostrar datos
+st.subheader("Vista previa de los datos")
+st.dataframe(df.head())
+
+# Resumen estadístico
+st.subheader("Resumen estadístico")
+st.write(df.describe())
+
+# Matriz de correlación
+st.subheader("Matriz de correlación")
+fig, ax = plt.subplots()
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", ax=ax)
+st.pyplot(fig)
+
+# Gráficos de distribución
+st.subheader("Distribución de variables")
+for column in ["Temperature_C", "Humidity_pct", "Precipitation_mm", "Wind_Speed_kmh"]:
+    fig, ax = plt.subplots()
+    sns.histplot(df[column], kde=True, bins=30, ax=ax)
+    ax.set_title(f"Distribución de {column}")
+    st.pyplot(fig)
+
+# Serie temporal
+st.subheader("Evolución de temperatura a lo largo del tiempo")
+fig, ax = plt.subplots()
+df_sorted = df.sort_values("Date_Time")
+sns.lineplot(data=df_sorted, x="Date_Time", y="Temperature_C", hue="Location", ax=ax)
+plt.xticks(rotation=45)
+st.pyplot(fig)
+
+st.write("Hecho con Streamlit y Seaborn.")
+
+
+import streamlit as st
 from PIL import Image
 from tensorflow.keras.preprocessing.image import img_to_array
 import numpy as np
