@@ -1,2 +1,6 @@
 tensorflow
 scikit_learn
+streamlit
+seaborn
+pandas
+matplotlib
