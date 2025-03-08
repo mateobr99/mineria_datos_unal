@@ -2,7 +2,6 @@ import streamlit as st
 import pickle
 import gzip
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 
 def load_model():
     """Carga el modelo desde un archivo comprimido y verifica su integridad."""
@@ -24,9 +23,12 @@ def load_scaler():
         return None
 
 def main():
+    st.set_page_config(page_title="Predicción de Precios de Viviendas en Boston", layout="centered")
+    
+    # Título principal y descripción
     st.title("Predicción de Precios de Viviendas en Boston")
-    st.write("Introduce las características de la casa para predecir su precio.")
-
+    st.markdown("### Introduce las características de la casa para predecir su precio")
+    
     # Definir nombres y valores por defecto de las características
     feature_names = [
         ("Tasa de criminalidad (CRIM)", 0.1),
@@ -44,45 +46,44 @@ def main():
         ("Porcentaje de población de estatus bajo (LSTAT)", 10.0)
     ]
     
-    # Crear entradas con valores por defecto corregidos
+    # Crear entradas de usuario para cada característica
     inputs = []
     for feature, default in feature_names:
         if feature == "Variable ficticia Charles River (CHAS)":
-            value = st.radio(feature, [0, 1], index=int(default))  # Asegurar que sea int
+            value = st.radio(feature, [0, 1], index=int(default))
         else:
             value = st.number_input(feature, min_value=0.0, value=float(default), format="%.4f")
         inputs.append(value)
     
+    # Botón para realizar la predicción
     if st.button("Predecir Precio"):
         model = load_model()
         scaler = load_scaler()
-
         if model is not None:
             try:
-                # Convertir a numpy array y asegurarse de que CHAS y RAD sean enteros
+                # Convertir la lista de inputs a un array de NumPy y asegurar el tipo correcto para CHAS y RAD
                 features_array = np.array(inputs).reshape(1, -1)
-                features_array[:, [3, 8]] = features_array[:, [3, 8]].astype(int)  # CHAS y RAD deben ser enteros
+                features_array[:, [3, 8]] = features_array[:, [3, 8]].astype(int)
                 
-                # Aplicar escalado si es necesario
+                # Escalar los datos si se dispone del escalador
                 if scaler:
                     features_array = scaler.transform(features_array)
 
                 # Realizar la predicción
                 prediction = model.predict(features_array)
-                
-                # Mostrar el resultado
                 st.success(f"El precio predicho de la casa es: ${prediction[0]:,.2f}")
-
             except Exception as e:
                 st.error(f"Error al realizar la predicción: {e}")
-                
-st.write("El mejor modelo fue un KernelRidge, este se comparó contra un modelo de ElasticNET y resultó siendo el mejor usando el método de GridSearch.")
-st.write("Este modelo fue estandarizado con StandardScaler, con el fin de normalizar los datos restando la media y dividiendo por la desviación estándar de cada característica. Este procedimiento mejora considerablemente el accuracy de modelos sensibles a la escala de las características, tales como el KernelRidge.")
-st.write("""
-            Este clasificador tiene los siguientes hiperparámetros:
-            - **alpha=0.1**: Es el parámetro de regularización que previene el sobreajuste del modelo. Entre más alto sea menos probabilidad de sobreajuste, aunque también implica que puede tener más dificultad de detectar patrones complejos en la data. En nuestro caso, el modelo tiene un alpha relativamente bajo por lo cual sería un modelo más complejo.
-            - **kernel='rbf'**: Es el tipo de kernel, en este caso es el RBF (radial basis function) el cual genera una función de similitud con base a la distancia de los puntos en el plano de características.
-        """)
+
+    # Información adicional en la barra lateral
+    st.sidebar.markdown("## Detalles del Modelo")
+    st.sidebar.write("Se usó el modelo **KernelRidge** (comparado con **ElasticNET**) optimizado mediante **GridSearch**.")
+    st.sidebar.write("Se aplicó **StandardScaler** para normalizar los datos (restar la media y dividir por la desviación estándar).")
+    st.sidebar.markdown("""
+    **Hiperparámetros del clasificador:**
+    - **alpha=0.1**: Parámetro de regularización que previene el sobreajuste. Un valor bajo permite mayor complejidad.
+    - **kernel='rbf'**: Kernel que genera una función de similitud basada en la distancia entre puntos.
+    """)
 
 if __name__ == "__main__":
     main()
