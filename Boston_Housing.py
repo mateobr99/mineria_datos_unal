@@ -78,7 +78,7 @@ def main():
     # Información adicional en la barra lateral
     st.sidebar.markdown("## Información del Modelo")
     st.sidebar.write("Modelo **KernelRidge** (comparado con **ElasticNET**) optimizado mediante **GridSearch**.")
-    st.sidebar.write("**StandardScaler** para normalizar los datos.
+    st.sidebar.write("Escalador: **StandardScaler** para normalizar los datos.
     st.sidebar.markdown("""
     **Hiperparámetros del clasificador:**
     - **alpha=0.1**
