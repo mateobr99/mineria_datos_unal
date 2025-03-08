@@ -76,13 +76,13 @@ def main():
                 st.error(f"Error al realizar la predicción: {e}")
 
     # Información adicional en la barra lateral
-    st.sidebar.markdown("## Detalles del Modelo")
-    st.sidebar.write("Se usó el modelo **KernelRidge** (comparado con **ElasticNET**) optimizado mediante **GridSearch**.")
-    st.sidebar.write("Se aplicó **StandardScaler** para normalizar los datos (restar la media y dividir por la desviación estándar).")
+    st.sidebar.markdown("## Información del Modelo")
+    st.sidebar.write("Modelo **KernelRidge** (comparado con **ElasticNET**) optimizado mediante **GridSearch**.")
+    st.sidebar.write("**StandardScaler** para normalizar los datos.
     st.sidebar.markdown("""
     **Hiperparámetros del clasificador:**
-    - **alpha=0.1**: Parámetro de regularización que previene el sobreajuste. Un valor bajo permite mayor complejidad.
-    - **kernel='rbf'**: Kernel que genera una función de similitud basada en la distancia entre puntos.
+    - **alpha=0.1**
+    - **kernel='rbf'**
     """)
 
 if __name__ == "__main__":
